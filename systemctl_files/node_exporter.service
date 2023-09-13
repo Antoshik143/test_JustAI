@@ -1,0 +1,15 @@
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+TimeoutStartSec=0
+Type=simple
+Restart=on-failure
+ExecStart=/usr/local/bin/node_exporter/node_exporter
+
+[Install]
+WantedBy=multi-user.target

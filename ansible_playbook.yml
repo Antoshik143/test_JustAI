@@ -1,0 +1,39 @@
+- name: Testovoe task
+  hosts: server
+  tasks:
+    - name: Copy Dockerfile to server
+      ansible.builtin.copy:
+        src: /home/anton/test_JustAI/docker_files/Dockerfile
+        dest: /home/adminka/Dockerfile
+        owner: adminka
+        group: adminka
+        mode: "0644"
+
+    - name: Copy docker-compose.yml to server
+      ansible.builtin.copy:
+        src: /home/anton/test_JustAI/docker_files/docker-compose.yml
+        dest: /home/adminka/docker-compose.yml
+        owner: adminka
+        group: adminka
+        mode: "0644"
+
+    - name: Copy Java app directory to server
+      ansible.builtin.copy:
+        src: /home/anton/test_JustAI/spring-boot-with-metrics
+        dest: /home/adminka/spring-boot-with-metrics
+        owner: adminka
+        group: adminka
+        mode: "0644"
+
+    - name: Build Docker image
+      community.docker.docker_image: 
+        name: java-app:latest
+        build:
+          path: /home/adminka
+        source: build
+
+    - name: Start Docker container with docker-compose
+      community.docker.docker_compose:
+        project_src: /home/adminka
+        files:
+        - docker-compose.yml
