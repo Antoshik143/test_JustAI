@@ -24,7 +24,8 @@ pip install docker-compose
 ansible-playbook -i hosts.ini ansible_playbook.yml
 ```
 
-4. На виртуальной машине мы развернули Node exporter как демон-службу, используя следующее:
+4. На виртуальной машине мы развернули Node exporter как демон-службу, используя следующий набор команд:
+
 ```
 scp node_exporter-1.6.0.linux-amd64.tar.gz adminka@192.168.0.159:/home/adminka/
 tar xvf node_exporter-1.6.0.linux-amd64.tar.gz
@@ -45,4 +46,57 @@ sudo systemctl start node_exporter
 ```
 Результат настройки Node Exporter
 ![Node Exporter](https://github.com/Antoshik143/test_JustAI/blob/main/pictures/node_exporter.png)
-5. 
+
+5. На нашем хосте мы развернули Prometheus и Grafana как демон службы:
+
+##### Prometheus
+
+```
+sudo mkdir /etc/prometheus
+sudo mkdir /var/lib/prometheus
+cd prometheus-2.45.0-rc.0.linux-amd64/
+sudo cp prometheus promtool /usr/local/bin/
+sudo cp -r console_libraries consoles prometheus.yml /etc/prometheus/
+sudo useradd --no-create-home --shell /bin/false prometheus
+sudo chown -R prometheus:prometheus /etc/prometheus/ /var/lib/prometheus/
+sudo chown prometheus:prometheus /usr/local/bin/
+```
+В файле prometheus.yml мы изменили точку монтирования:
+
+```
+static_configs:
+    - targets: ["192.168.0.159:9100"]
+```
+Далее создали файл службы prometheus.service
+Содержимое данного файла представлено [здесь](https://github.com/Antoshik143/test_JustAI/blob/main/systemctl_files/prometheus.service).
+
+```
+sudo systemctl daemon-reload
+sudo systemctl enable prometheus
+sudo systemctl start prometheus
+```
+Результат настройки Prometheus
+![Prometheus](https://github.com/Antoshik143/test_JustAI/blob/main/pictures/prometheus.png)
+
+##### Grafana
+
+```
+sudo mv grafana-9.5.3 /opt/grafana
+sudo useradd grafana
+sudo chown -R grafana:grafana /opt/grafana
+```
+Создадим службу для Grafana
+Содержимое данного файла представлено [здесь](https://github.com/Antoshik143/test_JustAI/blob/main/systemctl_files/grafana.service).
+
+```
+sudo systemctl daemon-reload
+sudo systemctl enable grafana
+sudo systemctl start grafana
+```
+Результат настройки Grafana
+![Grafana](https://github.com/Antoshik143/test_JustAI/blob/main/pictures/grafana.png)
+
+#### Результат работы всех 3-х служб
+
+![service1](https://github.com/Antoshik143/test_JustAI/blob/main/pictures/service1.png)
+![service2](https://github.com/Antoshik143/test_JustAI/blob/main/pictures/service2.png)

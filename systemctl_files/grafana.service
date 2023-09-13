@@ -1,0 +1,14 @@
+[Unit]
+Description=Grafana server
+After=network.target
+
+[Service]
+User=grafana
+Group=grafana
+WorkingDirectory=/opt/grafana
+ExecStart=/opt/grafana/bin/grafana-server \
+        --config=/opt/grafana/conf/defaults.ini \
+        --homepath=/opt/grafana
+
+[Install]
+WantedBy=multi-user.target

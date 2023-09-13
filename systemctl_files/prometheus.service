@@ -1,0 +1,21 @@
+[Unit]
+Description=Prometheus server
+Wants=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/prometheus \
+    --config.file=/etc/prometheus/prometheus.yml \
+    --storage.tsdb.path=/var/lib/prometheus/ \
+    --web.console.templates=/etc/prometheus/consoles \
+    --web.console.libraries=/etc/prometheus/console_libraries
+
+SyslogIdentifier=root
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
