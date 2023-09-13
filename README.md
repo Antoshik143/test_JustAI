@@ -37,7 +37,7 @@ sudo useradd --no-create-home --shell /bin/false node_exporter
 sudo chown -R node_exporter:node_exporter /usr/local/bin/node_exporter/node_exporter 
 sudo vi /etc/systemd/system/node_exporter.service
 ```
-Содержимое данного файла представлено в [файле](https://github.com/Antoshik143/test_JustAI/blob/main/systemctl_files/node_exporter.service).
+Содержимое данного файла демон-службы представлено в [файле](https://github.com/Antoshik143/test_JustAI/blob/main/systemctl_files/node_exporter.service).
 
 ```
 sudo systemctl daemon-reload
@@ -47,7 +47,7 @@ sudo systemctl start node_exporter
 Результат настройки Node Exporter
 ![Node Exporter](https://github.com/Antoshik143/test_JustAI/blob/main/pictures/node_exporter.png)
 
-5. На нашем хосте мы развернули Prometheus и Grafana как демон службы:
+5. На нашем хосте мы развернули Prometheus и Grafana как демон-службы:
 
 ##### Prometheus
 
